@@ -1,12 +1,10 @@
-
-solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.1;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract MedicalRecord is ERC721, AccessControl {
+contract MedicalRecord is ERC721Enumerable, AccessControl {
     bytes32 public constant DOCTOR_ROLE = keccak256("DOCTOR_ROLE");
 
     struct Record {
@@ -21,6 +19,10 @@ contract MedicalRecord is ERC721, AccessControl {
 
     constructor() ERC721("MedicalRecord", "MREC") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Enumerable, AccessControl) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 
     function createRecord(
